@@ -1,0 +1,7 @@
+{
+  "name": "StreamGuard - Stellar Drips Protocol",
+  "description": "Production-grade continuous token streaming protocol on Stellar Soroban with milestone-gated drip rates, emergency sender clawback, and real-time 60fps streaming ticker.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
