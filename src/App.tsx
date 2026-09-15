@@ -17,10 +17,6 @@ import {
   Award,
   Code2,
   Wallet,
-  Activity,
-  Layers,
-  ChevronRight,
-  ExternalLink,
 } from 'lucide-react';
 
 type ActiveTab = 'sender' | 'recipient' | 'manager' | 'storage' | 'grant' | 'code';
@@ -168,7 +164,6 @@ export default function App() {
             : m
         );
 
-        // Scale flow rate
         const multiplier = scaleBps / 10000;
         const newFlowRate = s.flowRatePerSecond * multiplier;
 
@@ -194,50 +189,49 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-950">
+    <div className="app-shell">
       {/* Top Protocol Navbar */}
-      <header className="sticky top-0 z-40 bg-slate-900/90 border-b border-slate-800/90 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="topbar">
+        <div className="topbar-inner">
           {/* Brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 via-emerald-400 to-green-300 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/20">
-              <Zap className="w-5 h-5 fill-slate-950" />
+          <div className="brand-group">
+            <div className="brand-icon">
+              <Zap style={{ width: 20, height: 20, fill: '#020617' }} />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg text-white tracking-tight">StreamGuard</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                  Soroban Protocol
-                </span>
+              <div className="brand-title">
+                StreamGuard
+                <span className="brand-tag">Soroban Protocol</span>
               </div>
-              <p className="text-[11px] text-slate-400">Continuous Token Drips & Milestone Safety</p>
+              <p className="brand-subtitle">Continuous Token Drips & Milestone Safety</p>
             </div>
           </div>
 
           {/* Wallet and Network Controls */}
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-slate-300 font-mono">Testnet (Protocol 21)</span>
+          <div className="topbar-actions">
+            <div className="network-indicator">
+              <span className="status-dot pulsing" />
+              <span>Testnet (Protocol 21)</span>
             </div>
 
             {activeAccount ? (
               <button
                 onClick={() => setIsWalletModalOpen(true)}
-                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all text-xs"
+                className="btn btn-secondary"
+                style={{ fontSize: '12px', padding: '6px 12px' }}
               >
-                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                <div className="text-left font-mono">
-                  <div className="text-white font-semibold">{activeAccount.address}</div>
-                  <div className="text-[10px] text-emerald-400">{activeAccount.balanceXlm.toLocaleString()} XLM</div>
+                <span className="status-dot" />
+                <div style={{ textAlign: 'left', fontFamily: 'var(--font-mono)' }}>
+                  <div style={{ color: '#ffffff', fontWeight: 600 }}>{activeAccount.address}</div>
+                  <div style={{ fontSize: '10px', color: 'var(--accent-emerald)' }}>{activeAccount.balanceXlm.toLocaleString()} XLM</div>
                 </div>
               </button>
             ) : (
               <button
                 onClick={() => setIsWalletModalOpen(true)}
-                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
+                className="btn btn-primary"
               >
-                <Wallet className="w-4 h-4" />
+                <Wallet style={{ width: 14, height: 14 }} />
                 Connect Stellar Wallet
               </button>
             )}
@@ -245,42 +239,38 @@ export default function App() {
         </div>
 
         {/* Sub-Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 overflow-x-auto py-2 border-t border-slate-800/60 scrollbar-none">
-          {[
-            { id: 'recipient', label: 'Recipient Claim Portal', icon: ArrowDownToLine, badge: streams.length },
-            { id: 'sender', label: 'Sender Streaming Control', icon: Send },
-            { id: 'manager', label: 'Grant Manager Attestations', icon: ShieldCheck },
-            { id: 'storage', label: 'Soroban Storage & TTL', icon: Database },
-            { id: 'grant', label: 'Grant Proposal Strategy', icon: Award },
-            { id: 'code', label: 'Code & Blueprint Hub', icon: Code2 },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as ActiveTab)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
-                  isActive
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
-                {tab.badge !== undefined && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-300 font-mono">
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <div className="nav-tabs-wrapper">
+          <div className="nav-tabs">
+            {[
+              { id: 'recipient', label: 'Recipient Claim Portal', icon: ArrowDownToLine, badge: streams.length },
+              { id: 'sender', label: 'Sender Streaming Control', icon: Send },
+              { id: 'manager', label: 'Grant Manager Attestations', icon: ShieldCheck },
+              { id: 'storage', label: 'Soroban Storage & TTL', icon: Database },
+              { id: 'grant', label: 'Grant Proposal Strategy', icon: Award },
+              { id: 'code', label: 'Code & Blueprint Hub', icon: Code2 },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as ActiveTab)}
+                  className={`nav-tab ${isActive ? 'active' : ''}`}
+                >
+                  <Icon style={{ width: 14, height: 14 }} />
+                  <span>{tab.label}</span>
+                  {tab.badge !== undefined && (
+                    <span className="tab-badge">{tab.badge}</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </header>
 
       {/* Main Content View */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="main-content">
         {activeTab === 'recipient' && (
           <RecipientDashboard
             streams={streams}
@@ -319,19 +309,19 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-6 mt-12 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-300">StreamGuard Protocol</span>
+      <footer className="app-footer">
+        <div className="footer-inner">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>StreamGuard Protocol</span>
             <span>•</span>
             <span>Stellar Drips Wave Submission</span>
             <span>•</span>
-            <span className="font-mono text-emerald-400">soroban-sdk = "21.0.0"</span>
+            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)' }}>soroban-sdk = "21.0.0"</span>
           </div>
 
-          <div className="flex items-center gap-4 text-slate-400">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="status-dot" />
               Sub-second finality
             </span>
             <span>•</span>

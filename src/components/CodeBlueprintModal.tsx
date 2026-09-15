@@ -121,51 +121,51 @@ export const CodeBlueprintModal: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Banner */}
-      <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="section-banner">
         <div>
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <Code2 className="w-4 h-4" />
+          <div className="eyebrow">
+            <Code2 style={{ width: 14, height: 14 }} />
             Complete Production Code Suite
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
+          <h2 className="banner-heading">
             Soroban Contracts, CLI Guide & Next.js SDK
           </h2>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="banner-subtitle">
             Fully typed, linted, and directly runnable source files ready for git repository commit and Soroban testnet deployment.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={handleDownloadFile}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors"
+            className="btn btn-secondary"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download style={{ width: 14, height: 14 }} />
             Download File
           </button>
           <button
             onClick={handleCopy}
-            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20"
+            className="btn btn-primary"
           >
-            {copied ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check style={{ width: 14, height: 14 }} /> : <Copy style={{ width: 14, height: 14 }} />}
             {copied ? 'Copied to Clipboard!' : 'Copy Code'}
           </button>
         </div>
       </div>
 
       {/* Main Code Explorer Container */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="code-suite-grid">
         {/* Left Column: File Tree */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-4">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-2">
+        <div className="file-tree-panel">
+          <div className="file-tree-heading">
             Project Files ({FILES.length})
           </div>
 
           {(['Rust Contract', 'Deployment & CLI', 'Next.js Frontend'] as const).map((cat) => (
-            <div key={cat} className="space-y-1">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2 pt-2">
+            <div key={cat} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', padding: '6px 8px 2px 8px' }}>
                 {cat}
               </div>
               {FILES.filter((f) => f.category === cat).map((file) => {
@@ -174,16 +174,14 @@ export const CodeBlueprintModal: React.FC = () => {
                   <button
                     key={file.id}
                     onClick={() => setSelectedFileId(file.id)}
-                    className={`w-full text-left px-2.5 py-2 rounded-xl text-xs font-mono transition-all flex items-center gap-2 ${
-                      isSelected
-                        ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 font-semibold'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
-                    }`}
+                    className={`file-btn ${isSelected ? 'active' : ''}`}
                   >
-                    {file.category === 'Rust Contract' && <FileCode className="w-3.5 h-3.5 text-orange-400 shrink-0" />}
-                    {file.category === 'Deployment & CLI' && <Terminal className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
-                    {file.category === 'Next.js Frontend' && <Layers className="w-3.5 h-3.5 text-teal-400 shrink-0" />}
-                    <span className="truncate">{file.name.split('/').pop()}</span>
+                    {file.category === 'Rust Contract' && <FileCode style={{ width: 14, height: 14, color: '#fb923c', flexShrink: 0 }} />}
+                    {file.category === 'Deployment & CLI' && <Terminal style={{ width: 14, height: 14, color: '#60a5fa', flexShrink: 0 }} />}
+                    {file.category === 'Next.js Frontend' && <Layers style={{ width: 14, height: 14, color: 'var(--accent-teal)', flexShrink: 0 }} />}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {file.name.split('/').pop()}
+                    </span>
                   </button>
                 );
               })}
@@ -192,21 +190,25 @@ export const CodeBlueprintModal: React.FC = () => {
         </div>
 
         {/* Right Column: Code Viewer */}
-        <div className="lg:col-span-3 bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+        <div className="code-viewer-panel">
           {/* File Header */}
-          <div className="bg-slate-900/90 px-5 py-3 border-b border-slate-800 flex items-center justify-between">
+          <div className="code-header">
             <div>
-              <span className="font-mono text-xs text-slate-300 font-bold">{selectedFile.name}</span>
-              <p className="text-[11px] text-slate-400 mt-0.5">{selectedFile.description}</p>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
+                {selectedFile.name}
+              </div>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                {selectedFile.description}
+              </p>
             </div>
-            <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+            <span className="badge" style={{ background: 'var(--bg-surface-subtle)', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
               {selectedFile.language}
             </span>
           </div>
 
           {/* Code content */}
-          <div className="p-4 overflow-x-auto max-h-[600px] overflow-y-auto">
-            <pre className="text-xs font-mono text-slate-200 leading-relaxed">
+          <div className="code-pre">
+            <pre style={{ margin: 0, fontFamily: 'inherit' }}>
               <code>{selectedFile.code}</code>
             </pre>
           </div>

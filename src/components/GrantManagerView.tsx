@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { Stream, Milestone, WalletAccount } from '../types/stream';
+import { Stream, WalletAccount } from '../types/stream';
 import {
   Award,
   CheckCircle2,
-  Clock,
   ShieldCheck,
-  TrendingUp,
   AlertTriangle,
   FileCheck,
   Key,
-  ExternalLink,
 } from 'lucide-react';
 
 interface GrantManagerViewProps {
@@ -26,7 +23,6 @@ export const GrantManagerView: React.FC<GrantManagerViewProps> = ({
   onToggleFreeze,
 }) => {
   const [selectedStreamId, setSelectedStreamId] = useState<string>(streams[0]?.id || '');
-  const [attestationSecret, setAttestationSecret] = useState('manager-signer-key-0x98...scf');
   const [scaleMultiplier, setScaleMultiplier] = useState<number>(15000); // 1.5x
 
   const targetStream = streams.find((s) => s.id === selectedStreamId) || streams[0];
@@ -37,27 +33,28 @@ export const GrantManagerView: React.FC<GrantManagerViewProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Overview Banner */}
-      <div className="bg-slate-900/70 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="section-banner">
         <div>
-          <div className="flex items-center gap-2 text-teal-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <ShieldCheck className="w-4 h-4" />
+          <div className="eyebrow">
+            <ShieldCheck style={{ width: 14, height: 14 }} />
             Milestone Verification & Flow Scaling
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Grant Manager Attestation Hub</h2>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <h2 className="banner-heading">Grant Manager Attestation Hub</h2>
+          <p className="banner-subtitle">
             Soroban smart contracts allow multi-sig grant managers to dynamically scale flow rates upon milestone validation, or freeze streams if deliverables stall.
           </p>
         </div>
 
         {/* Stream Selector */}
-        <div className="flex items-center gap-2 self-start md:self-auto">
-          <span className="text-xs text-slate-400">Target Stream:</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Target Stream:</span>
           <select
             value={selectedStreamId}
             onChange={(e) => setSelectedStreamId(e.target.value)}
-            className="bg-slate-800 border border-slate-700 text-xs text-white rounded-xl px-3 py-2 font-mono focus:border-emerald-500 focus:outline-none"
+            className="form-input font-mono"
+            style={{ width: 'auto', padding: '6px 12px', fontSize: '12px' }}
           >
             {streams.map((s) => (
               <option key={s.id} value={s.id}>
@@ -69,55 +66,53 @@ export const GrantManagerView: React.FC<GrantManagerViewProps> = ({
       </div>
 
       {targetStream && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Stream Details & Attestation Config */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
-            <h3 className="font-bold text-white text-base flex items-center gap-2">
-              <Award className="w-4 h-4 text-emerald-400" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          {/* Left Column: Stream Allocation Details */}
+          <div className="panel-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="panel-title">
+              <Award style={{ width: 16, height: 16, color: 'var(--accent-emerald)' }} />
               Stream Allocation Status
-            </h3>
+            </div>
 
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Stream ID:</span>
-                <span className="font-mono text-white font-bold">{targetStream.id}</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Stream ID:</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#ffffff' }}>{targetStream.id}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Sender / Grantor:</span>
-                <span className="font-mono text-slate-300">{targetStream.sender}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Sender / Grantor:</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>{targetStream.sender}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Recipient Grantee:</span>
-                <span className="font-mono text-slate-300">{targetStream.recipient}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Recipient Grantee:</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>{targetStream.recipient}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Total Committed:</span>
-                <span className="font-bold text-white font-mono">
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Total Committed:</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: '#ffffff' }}>
                   {targetStream.totalDeposit.toLocaleString()} {targetStream.token.symbol}
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Current Flow Rate:</span>
-                <span className="text-emerald-400 font-mono font-semibold">
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Current Flow Rate:</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent-emerald)' }}>
                   +{targetStream.flowRatePerSecond.toFixed(7)} / sec
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-800">
-                <span className="text-slate-400">Stream State:</span>
-                <span className={`font-semibold uppercase ${
-                  targetStream.status === 'active' ? 'text-emerald-400' : 'text-amber-400'
-                }`}>
-                  {targetStream.status}
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-dim)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Stream State:</span>
+                <span className={`badge ${targetStream.status === 'active' ? 'badge-active' : 'badge-paused'}`}>
+                  {targetStream.status.toUpperCase()}
                 </span>
               </div>
             </div>
 
-            {/* Scale multiplier selector */}
-            <div className="pt-2">
-              <label className="block text-xs font-semibold text-slate-300 mb-2">
+            {/* Scale Multiplier */}
+            <div style={{ paddingTop: '8px' }}>
+              <label className="form-label">
                 Milestone Approval Flow Multiplier
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                 {[
                   { label: '1.0x (100%)', val: 10000 },
                   { label: '1.5x (150%)', val: 15000 },
@@ -127,105 +122,98 @@ export const GrantManagerView: React.FC<GrantManagerViewProps> = ({
                     key={item.val}
                     type="button"
                     onClick={() => setScaleMultiplier(item.val)}
-                    className={`py-2 px-2 rounded-xl text-xs font-bold border transition-all ${
-                      scaleMultiplier === item.val
-                        ? 'bg-teal-500/20 border-teal-500 text-teal-300'
-                        : 'bg-slate-800/40 border-slate-700 text-slate-400 hover:text-white'
-                    }`}
+                    className={`btn ${scaleMultiplier === item.val ? 'btn-primary' : 'btn-secondary'}`}
+                    style={{ fontSize: '11px', padding: '6px 4px' }}
                   >
                     {item.label}
                   </button>
                 ))}
               </div>
-              <p className="text-[11px] text-slate-400 mt-2">
-                On signing, Soroban contract updates the <code className="text-emerald-400 font-mono">milestone_multiplier_bps</code> in Persistent storage.
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                On signing, Soroban contract updates <code style={{ color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>milestone_multiplier_bps</code> in Persistent storage.
               </p>
             </div>
 
             {/* Freeze control */}
-            <div className="pt-3 border-t border-slate-800">
+            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--border-dim)' }}>
               <button
                 onClick={() => onToggleFreeze(targetStream.id)}
-                className={`w-full py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${
-                  targetStream.status === 'paused'
-                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/30'
-                    : 'bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20'
-                }`}
+                className={`btn ${targetStream.status === 'paused' ? 'btn-primary' : 'btn-warning'}`}
+                style={{ width: '100%', padding: '10px 14px' }}
               >
-                <AlertTriangle className="w-3.5 h-3.5" />
+                <AlertTriangle style={{ width: 14, height: 14 }} />
                 {targetStream.status === 'paused' ? 'Unfreeze Stream Allocation' : 'Emergency Freeze Stream Allocation'}
               </button>
             </div>
           </div>
 
-          {/* Right Column: Milestones Checklist & Attestation signing */}
-          <div className="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-white text-base flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-teal-400" />
+          {/* Right Column: Milestones Checklist */}
+          <div className="panel-card" style={{ gridColumn: 'span 2', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="panel-header">
+              <div className="panel-title">
+                <FileCheck style={{ width: 16, height: 16, color: 'var(--accent-teal)' }} />
                 Grant Milestone Deliverables
-              </h3>
-              <span className="text-xs text-slate-400 font-mono">
+              </div>
+              <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
                 {targetStream.milestones.filter((m) => m.status === 'approved').length} / {targetStream.milestones.length} Completed
               </span>
             </div>
 
             {targetStream.milestones.length === 0 ? (
-              <div className="p-8 text-center text-slate-500 text-sm border border-slate-800/60 rounded-xl">
+              <div style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)', border: '1px dashed var(--border-dim)', borderRadius: 'var(--radius-md)' }}>
                 No milestone checkpoints assigned to this continuous stream.
               </div>
             ) : (
-              <div className="space-y-3">
-                {targetStream.milestones.map((m, idx) => {
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {targetStream.milestones.map((m) => {
                   const isApproved = m.status === 'approved';
                   return (
                     <div
                       key={m.id}
-                      className={`p-5 rounded-xl border transition-all ${
-                        isApproved
-                          ? 'bg-emerald-950/20 border-emerald-500/40'
-                          : 'bg-slate-800/30 border-slate-800 hover:border-slate-700'
-                      }`}
+                      style={{
+                        padding: '16px 20px',
+                        borderRadius: 'var(--radius-lg)',
+                        border: isApproved ? '1px solid var(--border-emerald)' : '1px solid var(--border-dim)',
+                        background: isApproved ? 'rgba(16, 185, 129, 0.08)' : 'var(--bg-surface-inset)',
+                        transition: 'border-color 140ms ease'
+                      }}
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">
-                              {m.id}
-                            </span>
-                            <h4 className="text-sm font-bold text-white">{m.title}</h4>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="stream-id-badge">{m.id}</span>
+                            <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{m.title}</h4>
                           </div>
-                          <p className="text-xs text-slate-400 max-w-lg">{m.description}</p>
+                          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', maxWidth: '520px' }}>
+                            {m.description}
+                          </p>
                         </div>
 
-                        {/* Status / Action */}
-                        <div className="shrink-0">
+                        <div>
                           {isApproved ? (
-                            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="badge badge-active">
+                              <CheckCircle2 style={{ width: 14, height: 14 }} />
                               Attestation Verified
-                            </div>
+                            </span>
                           ) : (
                             <button
                               onClick={() => handleAttest(m.id)}
-                              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300 text-slate-950 font-bold text-xs rounded-xl shadow transition-all flex items-center gap-1.5"
+                              className="btn btn-primary"
+                              style={{ fontSize: '12px', padding: '6px 12px' }}
                             >
-                              <Key className="w-3.5 h-3.5" />
+                              <Key style={{ width: 13, height: 13 }} />
                               Sign Attestation & Scale Rate
                             </button>
                           )}
                         </div>
                       </div>
 
-                      {/* Attestation metadata */}
-                      <div className="mt-3 pt-3 border-t border-slate-800/60 flex flex-wrap items-center justify-between text-[11px] text-slate-400 font-mono">
+                      <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-dim)', display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
                         <span>
-                          Flow Impact: <strong className="text-teal-300">{(m.scaleMultiplierBps / 10000).toFixed(1)}x Rate Multiplier</strong>
+                          Flow Impact: <strong style={{ color: 'var(--accent-teal)' }}>{(m.scaleMultiplierBps / 10000).toFixed(1)}x Rate Multiplier</strong>
                         </span>
                         {isApproved && m.attestationSigner && (
-                          <span className="text-slate-500">
-                            Signed by: {m.attestationSigner}
-                          </span>
+                          <span>Signed by: {m.attestationSigner}</span>
                         )}
                       </div>
                     </div>

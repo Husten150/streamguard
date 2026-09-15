@@ -6,14 +6,11 @@ import confetti from 'canvas-confetti';
 import {
   ArrowDownToLine,
   CheckCircle2,
-  Clock,
   Sparkles,
   ShieldAlert,
   History,
   Coins,
-  ExternalLink,
-  ChevronRight,
-  TrendingUp,
+  X
 } from 'lucide-react';
 
 interface RecipientDashboardProps {
@@ -29,7 +26,6 @@ export const RecipientDashboard: React.FC<RecipientDashboardProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
   const [selectedStreamForWithdraw, setSelectedStreamForWithdraw] = useState<Stream | null>(null);
-  const [customWithdrawAmount, setCustomWithdrawAmount] = useState('');
   const [lastTxReceipt, setLastTxReceipt] = useState<{
     txHash: string;
     amount: number;
@@ -63,57 +59,48 @@ export const RecipientDashboard: React.FC<RecipientDashboardProps> = ({
     onWithdraw(stream.id, specificAmount);
     triggerConfetti();
 
-    // Set simulated transaction receipt
     setLastTxReceipt({
       txHash: `0x${Math.random().toString(16).substring(2, 10)}${Math.random().toString(16).substring(2, 10)}...soroban`,
-      amount: specificAmount || 100, // resolved in parent
+      amount: specificAmount || 100,
       symbol: stream.token.symbol,
       ledgerSequence: 498450 + Math.floor(Math.random() * 50),
-      feeStroops: 100, // 0.00001 XLM
+      feeStroops: 100,
     });
 
     setSelectedStreamForWithdraw(null);
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Overview Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="section-banner">
         <div>
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="eyebrow">
+            <Sparkles style={{ width: 14, height: 14 }} />
             Vesting In Real-Time
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Recipient Claim Portal</h2>
-          <p className="text-sm text-slate-400 mt-1 max-w-xl">
+          <h2 className="banner-heading">Recipient Claim Portal</h2>
+          <p className="banner-subtitle">
             Watch your streaming tokens accrue every millisecond. Withdraw anytime with single-click Soroban authorization and zero lock-in once cliff passes.
           </p>
         </div>
 
-        {/* Tab switch */}
-        <div className="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 self-start md:self-auto">
+        {/* Tab Switch */}
+        <div style={{ display: 'flex', background: 'var(--bg-surface-elevated)', padding: '4px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-dim)' }}>
           <button
             onClick={() => setActiveTab('active')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'active'
-                ? 'bg-emerald-500 text-slate-950 shadow'
-                : 'text-slate-400 hover:text-white'
-            }`}
+            className={`btn ${activeTab === 'active' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ fontSize: '12px', padding: '6px 12px' }}
           >
             <span>Active Streams</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-900/30">
-              {activeIncoming.length}
-            </span>
+            <span className="tab-badge">{activeIncoming.length}</span>
           </button>
           <button
             onClick={() => setActiveTab('history')}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              activeTab === 'history'
-                ? 'bg-emerald-500 text-slate-950 shadow'
-                : 'text-slate-400 hover:text-white'
-            }`}
+            className={`btn ${activeTab === 'history' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ fontSize: '12px', padding: '6px 12px', marginLeft: '4px' }}
           >
-            <History className="w-3.5 h-3.5" />
+            <History style={{ width: 14, height: 14 }} />
             History ({historyStreams.length})
           </button>
         </div>
@@ -121,23 +108,24 @@ export const RecipientDashboard: React.FC<RecipientDashboardProps> = ({
 
       {/* Recent Tx Toast / Receipt */}
       {lastTxReceipt && (
-        <div className="bg-emerald-950/40 border border-emerald-500/40 p-4 rounded-xl flex items-center justify-between animate-in fade-in slide-in-from-top-2">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <CheckCircle2 className="w-5 h-5" />
+        <div style={{ background: 'rgba(16, 185, 129, 0.12)', border: '1px solid var(--border-emerald)', padding: '14px 20px', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 style={{ width: 18, height: 18 }} />
             </div>
             <div>
-              <div className="text-xs font-bold text-emerald-300">
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--accent-emerald)' }}>
                 Soroban Withdrawal Confirmed on Testnet
               </div>
-              <div className="text-[11px] font-mono text-slate-400">
+              <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
                 Tx: {lastTxReceipt.txHash} • Ledger #{lastTxReceipt.ledgerSequence} • Fee: {lastTxReceipt.feeStroops} Stroops (0.00001 XLM)
               </div>
             </div>
           </div>
           <button
             onClick={() => setLastTxReceipt(null)}
-            className="text-slate-400 hover:text-white text-xs px-2 py-1 rounded"
+            className="btn btn-secondary"
+            style={{ padding: '4px 10px', fontSize: '11px' }}
           >
             Dismiss
           </button>
@@ -146,12 +134,12 @@ export const RecipientDashboard: React.FC<RecipientDashboardProps> = ({
 
       {/* Main View Area */}
       {activeTab === 'active' ? (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {activeIncoming.length === 0 ? (
-            <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-12 text-center">
-              <Coins className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-slate-300">No Active Incoming Streams</h3>
-              <p className="text-sm text-slate-500 max-w-md mx-auto mt-1">
+            <div className="panel-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+              <Coins style={{ width: 44, height: 44, color: 'var(--text-muted)', margin: '0 auto 12px auto' }} />
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff' }}>No Active Incoming Streams</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '440px', margin: '6px auto 0 auto' }}>
                 When grant managers or employers create a stream destined for your Stellar address, it will automatically stream here.
               </p>
             </div>
@@ -167,31 +155,28 @@ export const RecipientDashboard: React.FC<RecipientDashboardProps> = ({
           )}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {historyStreams.length === 0 ? (
-            <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+            <div className="panel-card" style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--text-secondary)' }}>
               No historical streams recorded yet.
             </div>
           ) : (
             historyStreams.map((stream) => (
               <div
                 key={stream.id}
-                className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 flex items-center justify-between"
+                className="panel-card"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px' }}
               >
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-slate-400">{stream.id}</span>
-                    <h4 className="text-sm font-semibold text-white">{stream.title}</h4>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="stream-id-badge">{stream.id}</span>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{stream.title}</h4>
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
-                    Withdrawn total: <strong className="text-slate-200">{stream.withdrawnAmount.toLocaleString()} {stream.token.symbol}</strong> of {stream.totalDeposit.toLocaleString()} {stream.token.symbol}
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                    Withdrawn total: <strong style={{ color: '#ffffff' }}>{stream.withdrawnAmount.toLocaleString()} {stream.token.symbol}</strong> of {stream.totalDeposit.toLocaleString()} {stream.token.symbol}
                   </div>
                 </div>
-                <span className={`text-xs px-2.5 py-1 rounded-md font-semibold ${
-                  stream.status === 'completed'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                }`}>
+                <span className={`badge ${stream.status === 'completed' ? 'badge-completed' : 'badge-danger'}`}>
                   {stream.status.toUpperCase()}
                 </span>
               </div>
@@ -218,7 +203,6 @@ interface RecipientStreamCardProps {
   onClaimInstant: (amt?: number) => void;
 }
 
-// Sub-component for individual Recipient Stream Card
 const RecipientStreamCard: React.FC<RecipientStreamCardProps> = ({
   stream,
   onOpenClaimModal,
@@ -228,30 +212,28 @@ const RecipientStreamCard: React.FC<RecipientStreamCardProps> = ({
   const isCliffLocked = metrics.isCliffActive;
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 hover:border-slate-700/80 rounded-2xl p-6 transition-all shadow-md space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+    <div className="stream-card">
+      <div className="stream-card-header">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-emerald-400 bg-emerald-950/70 border border-emerald-500/30 px-2 py-0.5 rounded">
-              {stream.id}
-            </span>
-            <h3 className="text-base font-bold text-white">{stream.title}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="stream-id-badge">{stream.id}</span>
+            <h3 className="stream-title">{stream.title}</h3>
           </div>
-          <div className="text-xs text-slate-400 mt-1">
-            Sender: <span className="font-mono text-slate-300">{stream.sender}</span>
+          <div className="stream-meta">
+            <span>Sender: <code>{stream.sender}</code></span>
           </div>
         </div>
 
         {/* Status Pill */}
         <div>
           {isCliffLocked ? (
-            <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5" />
+            <span className="badge badge-paused">
+              <ShieldAlert style={{ width: 14, height: 14 }} />
               Cliff Guard Active
             </span>
           ) : (
-            <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="badge badge-active">
+              <span className="status-dot pulsing" />
               Unlocked & Claimable
             </span>
           )}
@@ -262,18 +244,19 @@ const RecipientStreamCard: React.FC<RecipientStreamCardProps> = ({
       <StreamTicker60fps stream={stream} />
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-        <div className="text-xs text-slate-400 flex items-center gap-2">
-          <span>Total Stream Cap: <strong className="text-slate-200">{stream.totalDeposit.toLocaleString()} {stream.token.symbol}</strong></span>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', paddingTop: '10px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', gap: '8px' }}>
+          <span>Total Stream Cap: <strong style={{ color: '#ffffff' }}>{stream.totalDeposit.toLocaleString()} {stream.token.symbol}</strong></span>
           <span>•</span>
-          <span>Claimed: <strong className="text-slate-200">{stream.withdrawnAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {stream.token.symbol}</strong></span>
+          <span>Claimed: <strong style={{ color: '#ffffff' }}>{stream.withdrawnAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })} {stream.token.symbol}</strong></span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={onOpenClaimModal}
             disabled={isCliffLocked || metrics.claimable <= 0}
-            className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition-colors disabled:opacity-50"
+            className="btn btn-secondary"
+            style={{ fontSize: '12px', padding: '8px 14px' }}
           >
             Custom Amount...
           </button>
@@ -281,16 +264,17 @@ const RecipientStreamCard: React.FC<RecipientStreamCardProps> = ({
           <button
             onClick={() => onClaimInstant()}
             disabled={isCliffLocked || metrics.claimable <= 0}
-            className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all disabled:opacity-50"
+            className="btn btn-primary"
+            style={{ fontSize: '12px', padding: '8px 16px' }}
           >
-            <ArrowDownToLine className="w-4 h-4" />
+            <ArrowDownToLine style={{ width: 15, height: 15 }} />
             Claim All Available Drips ({metrics.claimable.toFixed(2)} {stream.token.symbol})
           </button>
         </div>
       </div>
     </div>
   );
-}
+};
 
 interface WithdrawModalProps {
   stream: Stream;
@@ -298,7 +282,6 @@ interface WithdrawModalProps {
   onConfirm: (amt: number) => void;
 }
 
-// Modal for selecting custom withdrawal amount
 const WithdrawModal: React.FC<WithdrawModalProps> = ({
   stream,
   onClose,
@@ -316,64 +299,75 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden p-6 space-y-4">
-        <h3 className="text-lg font-bold text-white">Withdraw Vested Drips</h3>
-        <p className="text-xs text-slate-400">
-          Authorize a Soroban contract transaction to withdraw vested tokens directly to your Stellar account.
-        </p>
+    <div className="modal-overlay">
+      <div className="modal-dialog" style={{ maxWidth: '460px' }}>
+        <div className="modal-header">
+          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>Withdraw Vested Drips</h3>
+          <button onClick={onClose} className="btn btn-secondary" style={{ padding: '6px', border: 'none', background: 'transparent' }}>
+            <X style={{ width: 18, height: 18 }} />
+          </button>
+        </div>
 
-        <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-          <div className="flex justify-between text-xs text-slate-400">
-            <span>Max Claimable Now:</span>
-            <span className="font-mono text-emerald-400 font-bold">
-              {metrics.claimable.toFixed(7)} {stream.token.symbol}
-            </span>
+        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+            Authorize a Soroban contract transaction to withdraw vested tokens directly to your Stellar account.
+          </p>
+
+          <div style={{ background: 'var(--bg-surface-inset)', border: '1px solid var(--border-dim)', padding: '16px', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-secondary)' }}>
+              <span>Max Claimable Now:</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent-emerald)' }}>
+                {metrics.claimable.toFixed(7)} {stream.token.symbol}
+              </span>
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <input
+                type="number"
+                value={amt}
+                onChange={(e) => setAmt(e.target.value)}
+                className="form-input font-mono"
+                style={{ paddingRight: '60px' }}
+              />
+              <span style={{ position: 'absolute', right: '12px', top: '10px', fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                {stream.token.symbol}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                onClick={handleHalf}
+                className="btn btn-secondary"
+                style={{ fontSize: '11px', padding: '4px 10px' }}
+              >
+                50%
+              </button>
+              <button
+                onClick={handleMax}
+                className="btn btn-secondary"
+                style={{ fontSize: '11px', padding: '4px 10px', color: 'var(--accent-emerald)' }}
+              >
+                100% Max
+              </button>
+            </div>
           </div>
 
-          <div className="relative">
-            <input
-              type="number"
-              value={amt}
-              onChange={(e) => setAmt(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded-lg text-white font-mono text-sm focus:outline-none focus:border-emerald-500"
-            />
-            <span className="absolute right-3 top-2.5 text-xs text-slate-400 font-semibold">
-              {stream.token.symbol}
-            </span>
-          </div>
-
-          <div className="flex gap-2 pt-1">
-            <button
-              onClick={handleHalf}
-              className="text-[11px] px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:text-white"
-            >
-              50%
-            </button>
-            <button
-              onClick={handleMax}
-              className="text-[11px] px-2.5 py-1 rounded bg-slate-800 text-emerald-400 hover:bg-emerald-950/50"
-            >
-              100% Max
-            </button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', borderTop: '1px solid var(--border-dim)', paddingTop: '12px' }}>
+            <span>Estimated Soroban Network Fee:</span>
+            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>~100 Stroops (&lt; $0.0001)</span>
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800 pt-3">
-          <span>Estimated Soroban Network Fee:</span>
-          <span className="font-mono text-slate-200">~100 Stroops (&lt; $0.0001)</span>
-        </div>
-
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="modal-footer">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white"
+            className="btn btn-secondary"
           >
             Cancel
           </button>
           <button
             onClick={() => onConfirm(parseFloat(amt) || metrics.claimable)}
-            className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold"
+            className="btn btn-primary"
           >
             Confirm & Withdraw
           </button>
@@ -381,4 +375,4 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
       </div>
     </div>
   );
-}
+};

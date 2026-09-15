@@ -6,15 +6,12 @@ import {
   PlusCircle,
   Play,
   Pause,
-  ArrowDownToLine,
   TrendingUp,
   AlertTriangle,
-  Clock,
   Shield,
-  Send,
-  HelpCircle,
   Coins,
-  CheckCircle2
+  CheckCircle2,
+  X
 } from 'lucide-react';
 
 interface SenderDashboardProps {
@@ -101,44 +98,44 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Top action bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 border border-slate-800 p-5 rounded-2xl">
+      <div className="section-banner">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span>Sender Streaming Control</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h2 className="banner-heading">Sender Streaming Control</h2>
+            <span className="brand-tag">
               {senderStreams.length} Active Streams
             </span>
-          </h2>
-          <p className="text-sm text-slate-400 mt-1">
+          </div>
+          <p className="banner-subtitle">
             Lock funds into Soroban Persistent Storage with micro-drip flow rates, cliff guardrails, and clawback safety.
           </p>
         </div>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm"
+          className="btn btn-primary"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle style={{ width: 16, height: 16 }} />
           Create New Stream
         </button>
       </div>
 
-      {/* Streams Grid */}
-      <div className="space-y-4">
+      {/* Streams List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {senderStreams.length === 0 ? (
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-12 text-center">
-            <Coins className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <h3 className="text-lg font-semibold text-slate-300">No Streams Created Yet</h3>
-            <p className="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-4">
+          <div className="panel-card" style={{ textAlign: 'center', padding: '48px 24px' }}>
+            <Coins style={{ width: 44, height: 44, color: 'var(--text-muted)', margin: '0 auto 12px auto' }} />
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#ffffff' }}>No Streams Created Yet</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '440px', margin: '6px auto 16px auto' }}>
               Initiate continuous token drip streams to developers, contributors, or automated grant recipients.
             </p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-sm font-semibold inline-flex items-center gap-2"
+              className="btn btn-primary"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle style={{ width: 16, height: 16 }} />
               Create Stream
             </button>
           </div>
@@ -147,38 +144,29 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
             const isCliffInFuture = stream.cliffTime && Date.now() / 1000 < stream.cliffTime;
 
             return (
-              <div
-                key={stream.id}
-                className="bg-slate-900/80 border border-slate-800 hover:border-slate-700/80 rounded-2xl p-6 transition-all shadow-md space-y-4"
-              >
+              <div key={stream.id} className="stream-card">
                 {/* Header info */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+                <div className="stream-card-header">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded">
-                        {stream.id}
-                      </span>
-                      <h3 className="text-base font-bold text-white">{stream.title}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="stream-id-badge">{stream.id}</span>
+                      <h3 className="stream-title">{stream.title}</h3>
                     </div>
-                    <div className="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-                      <span>Recipient: <strong className="font-mono text-slate-300">{stream.recipient}</strong></span>
-                      <span>Contract Sequence: <strong className="font-mono text-slate-300">#{stream.ledgerSequence}</strong></span>
+                    <div className="stream-meta">
+                      <span>Recipient: <code>{stream.recipient}</code></span>
+                      <span>Contract Sequence: <code>#{stream.ledgerSequence}</code></span>
                     </div>
                   </div>
 
-                  {/* Badges */}
-                  <div className="flex items-center gap-2">
+                  {/* Status Badges */}
+                  <div>
                     {stream.status === 'paused' ? (
-                      <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                        Paused
-                      </span>
+                      <span className="badge badge-paused">Paused</span>
                     ) : stream.status === 'cancelled' ? (
-                      <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
-                        Cancelled / Clawed Back
-                      </span>
+                      <span className="badge badge-danger">Cancelled / Clawed Back</span>
                     ) : (
-                      <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="badge badge-active">
+                        <span className="status-dot pulsing" />
                         Live Streaming
                       </span>
                     )}
@@ -189,15 +177,16 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
                 <StreamTicker60fps stream={stream} />
 
                 {/* Control Action Toolbar */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px', paddingTop: '10px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
                     {/* Top-up button */}
                     <button
                       onClick={() => setTopUpTargetId(topUpTargetId === stream.id ? null : stream.id)}
                       disabled={stream.status === 'cancelled' || stream.status === 'completed'}
-                      className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors disabled:opacity-50"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '12px', padding: '6px 12px' }}
                     >
-                      <Coins className="w-3.5 h-3.5 text-emerald-400" />
+                      <Coins style={{ width: 14, height: 14, color: 'var(--accent-emerald)' }} />
                       Top-Up Balance
                     </button>
 
@@ -205,18 +194,20 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
                     {stream.status === 'paused' ? (
                       <button
                         onClick={() => onResumeStream(stream.id)}
-                        className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        className="btn btn-primary"
+                        style={{ fontSize: '12px', padding: '6px 12px' }}
                       >
-                        <Play className="w-3.5 h-3.5" />
+                        <Play style={{ width: 14, height: 14 }} />
                         Resume Stream
                       </button>
                     ) : (
                       <button
                         onClick={() => onPauseStream(stream.id)}
                         disabled={stream.status === 'cancelled' || stream.status === 'completed'}
-                        className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors disabled:opacity-50"
+                        className="btn btn-secondary"
+                        style={{ fontSize: '12px', padding: '6px 12px' }}
                       >
-                        <Pause className="w-3.5 h-3.5 text-amber-400" />
+                        <Pause style={{ width: 14, height: 14, color: 'var(--accent-amber)' }} />
                         Pause Stream
                       </button>
                     )}
@@ -225,9 +216,10 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
                     <button
                       onClick={() => onAdjustFlowRate(stream.id, stream.flowRatePerSecond * 1.5)}
                       disabled={stream.status === 'cancelled' || stream.status === 'completed'}
-                      className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition-colors disabled:opacity-50"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '12px', padding: '6px 12px' }}
                     >
-                      <TrendingUp className="w-3.5 h-3.5 text-teal-400" />
+                      <TrendingUp style={{ width: 14, height: 14, color: 'var(--accent-teal)' }} />
                       Scale Rate (+50% Milestone)
                     </button>
                   </div>
@@ -244,9 +236,10 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
                             onCancelStream(stream.id);
                           }
                         }}
-                        className="px-3.5 py-1.5 rounded-xl bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        className="btn btn-danger"
+                        style={{ fontSize: '12px', padding: '6px 12px' }}
                       >
-                        <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                        <AlertTriangle style={{ width: 14, height: 14, color: 'var(--accent-rose)' }} />
                         {isCliffInFuture ? 'Emergency Pre-Cliff Clawback (100%)' : 'Drain Remaining Unvested'}
                       </button>
                     )}
@@ -255,25 +248,28 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
 
                 {/* Top-up inline panel */}
                 {topUpTargetId === stream.id && (
-                  <div className="bg-slate-950/70 border border-emerald-500/30 p-4 rounded-xl flex flex-wrap items-center gap-3 animate-in fade-in">
-                    <span className="text-xs text-slate-300 font-medium">Add deposit to stream:</span>
+                  <div style={{ marginTop: '14px', padding: '14px', background: 'var(--bg-surface-inset)', border: '1px solid var(--border-emerald)', borderRadius: 'var(--radius-md)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Add deposit to stream:</span>
                     <input
                       type="number"
                       value={topUpAmount}
                       onChange={(e) => setTopUpAmount(e.target.value)}
-                      className="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-white text-xs font-mono w-32 focus:border-emerald-500 focus:outline-none"
+                      className="form-input font-mono"
+                      style={{ width: '120px', padding: '6px 10px', fontSize: '12px' }}
                       placeholder="Amount"
                     />
-                    <span className="text-xs font-mono text-emerald-400">{stream.token.symbol}</span>
+                    <span style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)', fontWeight: 700 }}>{stream.token.symbol}</span>
                     <button
                       onClick={() => handleExecuteTopUp(stream.id)}
-                      className="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-lg transition-colors"
+                      className="btn btn-primary"
+                      style={{ fontSize: '12px', padding: '6px 12px' }}
                     >
                       Confirm Top-Up (+Soroban Transfer)
                     </button>
                     <button
                       onClick={() => setTopUpTargetId(null)}
-                      className="text-xs text-slate-400 hover:text-slate-200"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '12px', padding: '6px 12px' }}
                     >
                       Cancel
                     </button>
@@ -287,64 +283,62 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
 
       {/* Create Stream Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-slate-900 border border-slate-700/80 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <PlusCircle className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-bold text-white text-base">Create Continuous Soroban Stream</h3>
+        <div className="modal-overlay">
+          <div className="modal-dialog">
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <PlusCircle style={{ width: 18, height: 18, color: 'var(--accent-emerald)' }} />
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>Create Continuous Soroban Stream</h3>
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="btn btn-secondary"
+                style={{ padding: '6px', border: 'none', background: 'transparent' }}
               >
-                ✕
+                <X style={{ width: 18, height: 18 }} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitCreate} className="p-6 space-y-4">
+            <form onSubmit={handleSubmitCreate} className="modal-body">
               {/* Token Selector */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Select Token</label>
-                <div className="grid grid-cols-3 gap-2">
+              <div className="form-group">
+                <label className="form-label">Select Token</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                   {SUPPORTED_TOKENS.map((tok) => (
                     <button
                       key={tok.symbol}
                       type="button"
                       onClick={() => setSelectedToken(tok)}
-                      className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all ${
-                        selectedToken.symbol === tok.symbol
-                          ? 'bg-emerald-950/50 border-emerald-500 text-white'
-                          : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-200'
-                      }`}
+                      className={`btn ${selectedToken.symbol === tok.symbol ? 'btn-primary' : 'btn-secondary'}`}
+                      style={{ padding: '10px 8px', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}
                     >
-                      <span className="text-lg">{tok.icon}</span>
-                      <div>
-                        <div className="font-bold text-xs">{tok.symbol}</div>
-                        <div className="text-[10px] text-slate-400">{tok.decimals} decimals</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>{tok.icon}</span>
+                        <span style={{ fontWeight: 700, fontSize: '13px' }}>{tok.symbol}</span>
                       </div>
+                      <span style={{ fontSize: '10px', opacity: 0.8 }}>{tok.decimals} decimals</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Recipient */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Recipient Stellar Address</label>
+              <div className="form-group">
+                <label className="form-label">Recipient Stellar Address</label>
                 <input
                   type="text"
                   required
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-white text-xs font-mono focus:border-emerald-500 focus:outline-none"
+                  className="form-input font-mono"
                   placeholder="G..."
                 />
               </div>
 
               {/* Deposit Amount & Duration */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                <div className="form-group">
+                  <label className="form-label">
                     Total Deposit ({selectedToken.symbol})
                   </label>
                   <input
@@ -353,83 +347,83 @@ export const SenderDashboard: React.FC<SenderDashboardProps> = ({
                     min="1"
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-white text-xs font-mono focus:border-emerald-500 focus:outline-none"
+                    className="form-input font-mono"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Duration (Days)</label>
+                <div className="form-group">
+                  <label className="form-label">Duration (Days)</label>
                   <input
                     type="number"
                     required
                     min="1"
                     value={durationDays}
                     onChange={(e) => setDurationDays(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-white text-xs font-mono focus:border-emerald-500 focus:outline-none"
+                    className="form-input font-mono"
                   />
                 </div>
               </div>
 
               {/* Cliff Period */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                    <Shield className="w-3.5 h-3.5 text-amber-400" />
+              <div className="form-group">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label className="form-label" style={{ marginBottom: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Shield style={{ width: 14, height: 14, color: 'var(--accent-amber)' }} />
                     Cliff Period (Days) - Emergency Clawback Guardrail
                   </label>
-                  <span className="text-[10px] text-amber-400">Sender can reclaim 100% before cliff</span>
+                  <span style={{ fontSize: '11px', color: 'var(--accent-amber)' }}>Sender can reclaim 100% before cliff</span>
                 </div>
                 <input
                   type="number"
                   min="0"
                   value={cliffDays}
                   onChange={(e) => setCliffDays(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-white text-xs font-mono focus:border-emerald-500 focus:outline-none"
+                  className="form-input font-mono"
                   placeholder="0 for no cliff"
                 />
               </div>
 
               {/* Memo */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Protocol Memo / Title</label>
+              <div className="form-group">
+                <label className="form-label">Protocol Memo / Title</label>
                 <input
                   type="text"
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-white text-xs focus:border-emerald-500 focus:outline-none"
+                  className="form-input"
                   placeholder="e.g. SCF Grant Milestone Stream"
                 />
               </div>
 
               {/* Calculated Rate Box */}
-              <div className="bg-slate-950/70 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
+              <div style={{ background: 'var(--bg-surface-inset)', border: '1px solid var(--border-dim)', padding: '12px 16px', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '16px' }}>
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Computed Flow Rate:</span>
-                  <span className="text-emerald-400 font-mono font-bold">
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '11px' }}>Computed Flow Rate:</span>
+                  <span style={{ color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
                     +{calculatedFlowRate.toFixed(7)} {selectedToken.symbol} / sec
                   </span>
                 </div>
-                <div className="text-right">
-                  <span className="text-slate-400 block text-[11px]">Daily Allocation:</span>
-                  <span className="text-white font-mono font-semibold">
+                <div style={{ textAlign: 'right' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '11px' }}>Daily Allocation:</span>
+                  <span style={{ color: '#ffffff', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
                     ~{calculatedDailyRate.toFixed(2)} {selectedToken.symbol} / day
                   </span>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-medium"
+                  className="btn btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+                  className="btn btn-primary"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 style={{ width: 16, height: 16 }} />
                   Sign & Lock Deposit into Soroban
                 </button>
               </div>

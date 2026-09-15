@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Database, HardDrive, Cpu, RefreshCw, Zap, Shield, CheckCircle2, Layers } from 'lucide-react';
+import { Database, HardDrive, Cpu, RefreshCw } from 'lucide-react';
 
 export const SorobanStorageInspector: React.FC = () => {
   const [currentLedger, setCurrentLedger] = useState<number>(498620);
@@ -16,18 +16,18 @@ export const SorobanStorageInspector: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Banner */}
-      <div className="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="section-banner">
         <div>
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <Database className="w-4 h-4" />
+          <div className="eyebrow">
+            <Database style={{ width: 14, height: 14 }} />
             Soroban Host Environment Architecture
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
+          <h2 className="banner-heading">
             Instance vs. Persistent Storage & TTL Rent Engine
           </h2>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="banner-subtitle">
             StreamGuard implements a dual-tier storage strategy designed specifically for Soroban State Archival and Storage Rent rules, preventing state bloat and guaranteeing lifetime persistence.
           </p>
         </div>
@@ -35,122 +35,123 @@ export const SorobanStorageInspector: React.FC = () => {
         <button
           onClick={handleBumpTtl}
           disabled={isBumping}
-          className="px-4 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 text-xs font-bold font-mono flex items-center gap-2 transition-all self-start md:self-auto"
+          className="btn btn-secondary font-mono"
+          style={{ padding: '8px 16px', fontSize: '12px', color: 'var(--accent-emerald)' }}
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isBumping ? 'animate-spin' : ''}`} />
+          <RefreshCw style={{ width: 14, height: 14 }} className={isBumping ? 'pulsing' : ''} />
           Invoke extend_ttl()
         </button>
       </div>
 
       {/* Dual Storage Comparison Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid-cols-2" style={{ marginBottom: '20px' }}>
         {/* Instance Storage Card */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                <Cpu className="w-5 h-5" />
+        <div className="panel-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-purple)' }}>
+                <Cpu style={{ width: 20, height: 20 }} />
               </div>
               <div>
-                <h3 className="font-bold text-white text-base">Soroban Instance Storage</h3>
-                <span className="text-[11px] font-mono text-purple-400">env.storage().instance()</span>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff' }}>Soroban Instance Storage</h3>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-purple)' }}>env.storage().instance()</span>
               </div>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-300 font-mono font-semibold border border-purple-500/20">
+            <span className="badge" style={{ background: 'rgba(168, 85, 247, 0.12)', border: '1px solid rgba(168, 85, 247, 0.3)', color: '#d8b4fe', fontFamily: 'var(--font-mono)' }}>
               Single-Key Root
             </span>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
             Stores singleton protocol parameters tied directly to the contract code's lifecycle. Loaded into host memory whenever any contract entry point is called.
           </p>
 
-          <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2 text-xs font-mono">
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">DataKey::Admin:</span>
-              <span className="text-purple-300">GB7B3XW9QZ...4X9R2M</span>
+          <div style={{ background: 'var(--bg-surface-inset)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>DataKey::Admin:</span>
+              <span style={{ color: '#d8b4fe' }}>GB7B3XW9QZ...4X9R2M</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">DataKey::StreamSequence:</span>
-              <span className="text-white font-bold">1,003</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>DataKey::StreamSequence:</span>
+              <span style={{ color: '#ffffff', fontWeight: 700 }}>1,003</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Footprint Size:</span>
-              <span className="text-emerald-400 font-semibold">128 Bytes</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Footprint Size:</span>
+              <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>128 Bytes</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Host Load Gas:</span>
-              <span className="text-emerald-400 font-semibold">Minimal (Shared Instance)</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Host Load Gas:</span>
+              <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>Minimal (Shared Instance)</span>
             </div>
           </div>
         </div>
 
         {/* Persistent Storage Card */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <HardDrive className="w-5 h-5" />
+        <div className="panel-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid var(--border-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-emerald)' }}>
+                <HardDrive style={{ width: 20, height: 20 }} />
               </div>
               <div>
-                <h3 className="font-bold text-white text-base">Soroban Persistent Storage</h3>
-                <span className="text-[11px] font-mono text-emerald-400">env.storage().persistent()</span>
+                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff' }}>Soroban Persistent Storage</h3>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)' }}>env.storage().persistent()</span>
               </div>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-300 font-mono font-semibold border border-emerald-500/20">
+            <span className="badge badge-active font-mono">
               Sharded Per Stream
             </span>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Each stream is stored under an isolated key <code className="text-emerald-400 font-mono">DataKey::Stream(u64)</code>. Allows millions of concurrent streams without inflating the read footprint of unrelated calls.
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+            Each stream is stored under an isolated key <code style={{ color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>DataKey::Stream(u64)</code>. Allows millions of concurrent streams without inflating the read footprint.
           </p>
 
-          <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2 text-xs font-mono">
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Storage Key:</span>
-              <span className="text-emerald-300">DataKey::Stream(id)</span>
+          <div style={{ background: 'var(--bg-surface-inset)', border: '1px solid var(--border-dim)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Storage Key:</span>
+              <span style={{ color: 'var(--accent-emerald)' }}>DataKey::Stream(id)</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Stream Struct Size:</span>
-              <span className="text-white font-bold">~248 Bytes / stream</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Stream Struct Size:</span>
+              <span style={{ color: '#ffffff', fontWeight: 700 }}>~248 Bytes / stream</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Threshold / Bump:</span>
-              <span className="text-slate-300 font-semibold">120,960 / 518,400 Ledgers</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Threshold / Bump:</span>
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>120,960 / 518,400 Ledgers</span>
             </div>
-            <div className="flex justify-between text-slate-300">
-              <span className="text-slate-500">Archival Immunity:</span>
-              <span className="text-emerald-400 font-semibold">Guaranteed via auto extend_ttl</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Archival Immunity:</span>
+              <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>Guaranteed via auto extend_ttl</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Real-time State & Benchmark Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-          <span className="text-slate-500 block text-[11px] font-medium">Stellar Testnet Ledger</span>
-          <span className="text-white font-bold font-mono text-lg">#{currentLedger.toLocaleString()}</span>
-          <span className="text-[10px] text-emerald-400 block mt-0.5">~5.0 sec ledger latency</span>
+      {/* Real-time Metrics Grid */}
+      <div className="grid-cols-4">
+        <div className="panel-card" style={{ padding: '16px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, display: 'block' }}>Stellar Testnet Ledger</span>
+          <span style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff', display: 'block', marginTop: '2px' }}>#{currentLedger.toLocaleString()}</span>
+          <span style={{ fontSize: '10px', color: 'var(--accent-emerald)', display: 'block', marginTop: '4px' }}>~5.0 sec ledger latency</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-          <span className="text-slate-500 block text-[11px] font-medium">TTL Safe Buffer</span>
-          <span className="text-emerald-400 font-bold font-mono text-lg">{ttlRemaining.toLocaleString()}</span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">Ledgers (~30 days)</span>
+        <div className="panel-card" style={{ padding: '16px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, display: 'block' }}>TTL Safe Buffer</span>
+          <span style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent-emerald)', display: 'block', marginTop: '2px' }}>{ttlRemaining.toLocaleString()}</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginTop: '4px' }}>Ledgers (~30 days)</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-          <span className="text-slate-500 block text-[11px] font-medium">Compiled Wasm Footprint</span>
-          <span className="text-teal-300 font-bold font-mono text-lg">42.8 KB</span>
-          <span className="text-[10px] text-teal-400 block mt-0.5">opt-level = 'z' + lto</span>
+        <div className="panel-card" style={{ padding: '16px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, display: 'block' }}>Compiled Wasm Footprint</span>
+          <span style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent-teal)', display: 'block', marginTop: '2px' }}>42.8 KB</span>
+          <span style={{ fontSize: '10px', color: 'var(--accent-teal)', display: 'block', marginTop: '4px' }}>opt-level = 'z' + lto</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-xl">
-          <span className="text-slate-500 block text-[11px] font-medium">Avg Withdrawal Gas Fee</span>
-          <span className="text-white font-bold font-mono text-lg">100 Stroops</span>
-          <span className="text-[10px] text-slate-400 block mt-0.5">&lt; $0.00005 USD / claim</span>
+        <div className="panel-card" style={{ padding: '16px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, display: 'block' }}>Avg Withdrawal Gas Fee</span>
+          <span style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#ffffff', display: 'block', marginTop: '2px' }}>100 Stroops</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-secondary)', display: 'block', marginTop: '4px' }}>&lt; $0.00005 USD / claim</span>
         </div>
       </div>
     </div>

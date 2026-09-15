@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { WalletAccount, WalletType } from '../types/stream';
+import { WalletAccount } from '../types/stream';
 import { INITIAL_WALLETS } from '../data/mockStreams';
-import { X, Check, ExternalLink, ShieldCheck, RefreshCw, Key, Plus } from 'lucide-react';
+import { X, Check, RefreshCw, Plus } from 'lucide-react';
 
 interface WalletModalProps {
   isOpen: boolean;
@@ -50,30 +50,31 @@ export const WalletModal: React.FC<WalletModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700/80 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+    <div className="modal-overlay">
+      <div className="modal-dialog">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+        <div className="modal-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="brand-icon" style={{ width: 32, height: 32, fontSize: '13px' }}>
               SG
             </div>
             <div>
-              <h3 className="font-semibold text-white text-base">Stellar Wallets Kit</h3>
-              <p className="text-xs text-slate-400">Select wallet or dev testnet account</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>Stellar Wallets Kit</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Select wallet or dev testnet account</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="btn btn-secondary"
+            style={{ padding: '6px', border: 'none', background: 'transparent' }}
           >
-            <X className="w-5 h-5" />
+            <X style={{ width: 18, height: 18 }} />
           </button>
         </div>
 
         {/* Wallets list */}
-        <div className="p-6 space-y-3 max-h-[60vh] overflow-y-auto">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+        <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)' }}>
             Supported Stellar Wallets & Testnet Signers
           </div>
 
@@ -86,51 +87,58 @@ export const WalletModal: React.FC<WalletModalProps> = ({
                   onSelectAccount(wallet);
                   onClose();
                 }}
-                className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
-                  isSelected
-                    ? 'bg-emerald-950/30 border-emerald-500/50 shadow-md shadow-emerald-950/20'
-                    : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 hover:bg-slate-800/80'
-                }`}
+                style={{
+                  padding: '14px 16px',
+                  borderRadius: 'var(--radius-lg)',
+                  border: isSelected ? '1px solid var(--border-emerald)' : '1px solid var(--border-dim)',
+                  background: isSelected ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-surface-elevated)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 140ms ease'
+                }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-md)', background: 'var(--bg-surface-inset)', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
                     {wallet.type === 'freighter' && '🚢'}
                     {wallet.type === 'xbull' && '🐂'}
                     {wallet.type === 'albedo' && '✨'}
                     {wallet.type === 'simulated' && '🔑'}
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-white">{wallet.name}</span>
-                      <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-700/60 text-slate-300">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff' }}>{wallet.name}</span>
+                      <span className="badge" style={{ background: 'var(--bg-surface-subtle)', color: 'var(--text-secondary)', fontSize: '10px' }}>
                         {wallet.type}
                       </span>
                     </div>
-                    <div className="text-xs font-mono text-slate-400 mt-0.5">
+                    <div style={{ fontSize: '12px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', marginTop: '2px' }}>
                       {wallet.address}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-right">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', textAlign: 'right' }}>
                   <div>
-                    <div className="text-xs font-mono text-emerald-400 font-semibold">
+                    <div style={{ fontSize: '13px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent-emerald)' }}>
                       {wallet.balanceXlm.toLocaleString()} XLM
                     </div>
-                    <div className="text-[11px] font-mono text-slate-400">
+                    <div style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
                       {wallet.balanceUsdc.toLocaleString()} USDC
                     </div>
                   </div>
 
                   {isSelected ? (
-                    <div className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center">
-                      <Check className="w-4 h-4 stroke-[3]" />
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--accent-emerald)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Check style={{ width: 14, height: 14, strokeWidth: 3 }} />
                     </div>
                   ) : (
                     <button
                       onClick={(e) => handleFaucetAirdrop(e, wallet.address)}
                       title="Request 1,000 Testnet XLM Faucet"
-                      className="text-[11px] text-slate-400 hover:text-emerald-400 hover:bg-slate-700/50 p-1.5 rounded-lg border border-slate-700 transition-colors"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '11px', padding: '4px 8px' }}
                     >
                       +Faucet
                     </button>
@@ -143,16 +151,17 @@ export const WalletModal: React.FC<WalletModalProps> = ({
           <button
             onClick={handleGenerateTestnetAccount}
             disabled={isGenerating}
-            className="w-full mt-3 py-3 px-4 rounded-xl border border-dashed border-slate-700 hover:border-emerald-500/50 bg-slate-800/20 hover:bg-emerald-950/20 text-slate-300 hover:text-emerald-400 text-sm font-medium transition-all flex items-center justify-center gap-2"
+            className="btn btn-secondary"
+            style={{ width: '100%', borderStyle: 'dashed', padding: '12px', marginTop: '6px' }}
           >
             {isGenerating ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
+                <RefreshCw style={{ width: 14, height: 14 }} className="pulsing" />
                 Generating Stellar Keypair on Testnet...
               </>
             ) : (
               <>
-                <Plus className="w-4 h-4" />
+                <Plus style={{ width: 14, height: 14 }} />
                 Generate Fresh Testnet Keypair (with Friendbot Faucet)
               </>
             )}
@@ -160,12 +169,12 @@ export const WalletModal: React.FC<WalletModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="bg-slate-950/60 px-6 py-3 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <div style={{ background: 'var(--bg-surface-inset)', padding: '12px 24px', borderTop: '1px solid var(--border-dim)', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-emerald)' }}>
+            <span className="status-dot pulsing" />
             Stellar Soroban Testnet RPC Connected
           </span>
-          <span className="text-slate-500">Protocol 21 Enabled</span>
+          <span>Protocol 21 Enabled</span>
         </div>
       </div>
     </div>

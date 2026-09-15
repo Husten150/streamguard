@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GRANT_STRATEGY_CONTENT } from '../contracts/rustSource';
-import { Award, Zap, Copy, Check, Sparkles, CheckCircle2, Calendar, Target, Shield } from 'lucide-react';
+import { Award, Copy, Check, Sparkles, CheckCircle2, Calendar } from 'lucide-react';
 
 export const GrantStrategySection: React.FC = () => {
   const [copiedPitch, setCopiedPitch] = useState(false);
@@ -37,79 +37,79 @@ ${GRANT_STRATEGY_CONTENT.milestones
   };
 
   return (
-    <div className="space-y-6">
+    <div>
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="section-banner">
         <div>
-          <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-1">
-            <Award className="w-4 h-4" />
+          <div className="eyebrow">
+            <Award style={{ width: 14, height: 14 }} />
             Stellar Drips Wave • Hackathon Grant Package
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
+          <h2 className="banner-heading">
             Submission Strategy & Technical Blueprint
           </h2>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="banner-subtitle">
             A comprehensive, battle-tested grant dossier tailored to Stellar Foundation reviewers and Soroban core engineers.
           </p>
         </div>
 
         <button
           onClick={handleCopyFullMarkdown}
-          className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20 self-start md:self-auto"
+          className="btn btn-primary"
         >
-          {copiedFull ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+          {copiedFull ? <Check style={{ width: 14, height: 14 }} /> : <Copy style={{ width: 14, height: 14 }} />}
           {copiedFull ? 'Full Markdown Copied!' : 'Copy Entire Grant Application'}
         </button>
       </div>
 
       {/* 3-Sentence Elevator Pitch */}
-      <div className="bg-slate-900/90 border border-emerald-500/30 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-            <h3 className="text-sm font-bold text-emerald-300 uppercase tracking-wider">
+      <div className="panel-card" style={{ marginBottom: '24px', border: '1px solid var(--border-emerald)', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="status-dot" />
+            <h3 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent-emerald)' }}>
               3-Sentence Elevator Pitch (Reviewer Executive Summary)
             </h3>
           </div>
           <button
             onClick={handleCopyPitch}
-            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700 transition-colors"
+            className="btn btn-secondary"
+            style={{ fontSize: '11px', padding: '4px 10px' }}
           >
-            {copiedPitch ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copiedPitch ? <Check style={{ width: 12, height: 12, color: 'var(--accent-emerald)' }} /> : <Copy style={{ width: 12, height: 12 }} />}
             {copiedPitch ? 'Copied' : 'Copy Pitch'}
           </button>
         </div>
 
-        <blockquote className="text-slate-100 text-sm sm:text-base leading-relaxed font-serif italic border-l-2 border-emerald-500 pl-4 py-1">
+        <blockquote style={{ fontSize: '15px', fontStyle: 'italic', lineHeight: 1.6, borderLeft: '3px solid var(--accent-emerald)', paddingLeft: '16px', color: '#ffffff' }}>
           "{GRANT_STRATEGY_CONTENT.elevatorPitch}"
         </blockquote>
       </div>
 
       {/* Technical Differentiators Grid */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="w-4 h-4 text-emerald-400" />
-          <h3 className="text-base font-bold text-white">
+      <div style={{ marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <Sparkles style={{ width: 16, height: 16, color: 'var(--accent-emerald)' }} />
+          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
             Technical Differentiators Highlighting Stellar & Soroban
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid-cols-2">
           {GRANT_STRATEGY_CONTENT.technicalDifferentiators.map((diff, idx) => (
             <div
               key={idx}
-              className="bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-2 transition-all shadow-sm"
+              className="panel-card"
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span className="stream-id-badge">
                   {diff.tag}
                 </span>
-                <span className="text-xs font-mono text-slate-500">#0{idx + 1}</span>
+                <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>#0{idx + 1}</span>
               </div>
-              <h4 className="text-sm font-bold text-white">{diff.title}</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">{diff.desc}</p>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{diff.title}</h4>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{diff.desc}</p>
             </div>
           ))}
         </div>
@@ -117,40 +117,36 @@ ${GRANT_STRATEGY_CONTENT.milestones
 
       {/* 3-Milestone Launch Roadmap */}
       <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Calendar className="w-4 h-4 text-teal-400" />
-          <h3 className="text-base font-bold text-white">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <Calendar style={{ width: 16, height: 16, color: 'var(--accent-teal)' }} />
+          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff' }}>
             Post-Hackathon 3-Milestone Mainnet Launch Roadmap
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid-cols-3">
           {GRANT_STRATEGY_CONTENT.milestones.map((ms) => (
             <div
               key={ms.number}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4"
+              className="panel-card"
+              style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '16px' }}
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center font-mono font-bold text-emerald-400 text-xs">
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <span className="brand-icon" style={{ width: 28, height: 28, fontSize: '13px', borderRadius: 'var(--radius-sm)' }}>
                     {ms.number}
                   </span>
-                  <span className="text-xs font-mono text-slate-400">{ms.duration}</span>
+                  <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{ms.duration}</span>
                 </div>
-                <h4 className="text-sm font-bold text-white">{ms.title}</h4>
-                <ul className="space-y-2 text-xs text-slate-300 pt-2 border-t border-slate-800">
+                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', marginBottom: '12px' }}>{ms.title}</h4>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', borderTop: '1px solid var(--border-dim)', paddingTop: '12px' }}>
                   {ms.deliverables.map((del, dIdx) => (
-                    <li key={dIdx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                      <span className="leading-snug text-slate-400">{del}</span>
+                    <li key={dIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: 'var(--text-secondary)' }}>
+                      <CheckCircle2 style={{ width: 14, height: 14, color: 'var(--accent-emerald)', flexShrink: 0, marginTop: 2 }} />
+                      <span style={{ lineHeight: 1.4 }}>{del}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              <div className="pt-3 border-t border-slate-800/80 text-[11px] text-slate-500 font-mono flex items-center justify-between">
-                <span>Phase Status: Planned</span>
-                <span className="text-emerald-400">Target Q4</span>
               </div>
             </div>
           ))}
